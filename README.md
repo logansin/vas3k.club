@@ -158,6 +158,19 @@ Take some time to press F and give some respects to our [best contributors](http
 - [@FMajesty](https://github.com/FMajesty)
 
 
+От себятина 
+
+graph TD
+  A[Клиент] --> B[Nginx]
+  B --> C[Django]
+  C --> D[PostgreSQL]
+  C --> E[Redis]
+  C --> F[Telegram API]
+  C --> G[Stripe]
+  E --> H[Django-Q Workers]
+  H --> I[Email Digests]
+  H --> J[AI Processing]
+
 ## 👩‍💼 License 
 
 [MIT](LICENSE)
