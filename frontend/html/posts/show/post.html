@@ -31,7 +31,7 @@
                                 <span class="label-title">Удалённый пост</span>
                             </span>
                         </div>
-                    {% elif not post.is_visible %}
+                    {% elif post.visibility == "draft" %}
                         <div class="post-label">
                             {% include "posts/widgets/draft_label.html" %}
                         </div>
@@ -72,6 +72,10 @@
                 </div>
             </header>
         {% endblock %}
+
+        {% if post.text|length > 10000 %}
+            <post-toc comments-count={{post.comment_count}}></post-toc>
+        {% endif %}
 
         {% block post_text %}
             <section class="post-text">

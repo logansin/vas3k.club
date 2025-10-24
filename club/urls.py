@@ -1,5 +1,4 @@
 from django.conf import settings
-from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
 from django.urls import path, include, re_path
 from django.views.generic import RedirectView
@@ -18,11 +17,11 @@ from comments.api import api_list_post_comments
 from comments.views import create_comment, edit_comment, delete_comment, show_comment, upvote_comment, \
     retract_comment_vote, pin_comment, delete_comment_thread
 from common.feature_flags import feature_switch
-from invites.views import show_invite, list_invites, activate_invite
-from landing.views import landing, godmode_network_settings, godmode_digest_settings, godmode_settings, \
-    godmode_invite, godmode_generate_invite_code, godmode_sunday_posts, godmode_mass_email
-from ai.views import llm_agent_playground
-from misc.fun import badge_generator, mass_note
+from invites.views import show_invite, list_invites, activate_invite, godmode_generate_invite_code
+from landing.views import landing
+from godmode.views.main import godmode, godmode_list_model, godmode_edit_model, godmode_delete_model, \
+    godmode_create_model, godmode_show_page, godmode_action
+from misc.fun import mass_note
 from misc.views import stats, network, robots, generate_ical_invite, generate_google_invite, show_achievement
 from rooms.views import redirect_to_room_chat, list_rooms, toggle_room_subscription, toggle_room_mute
 from notifications.views import render_weekly_digest, email_unsubscribe, email_confirm, email_digest_switch, \
@@ -32,21 +31,21 @@ from payments.views.common import membership_expired
 from payments.api import api_gift_days
 from invites.api import api_gift_invite_link
 from payments.views.stripe import pay, done, stripe_webhook, stop_subscription
-from payments.views.crypto import crypto, coinbase_webhook
 from posts.api import md_show_post, api_show_post, json_feed
 from posts.models.post import Post
 from posts.rss import NewPostsRss
 from posts.user_rss import UserPostsRss
 from posts.sitemaps import sitemaps
-from posts.views.admin_actions import admin_post, announce_post, curate_post
-from posts.views.api import toggle_post_bookmark
+from posts.views.api import toggle_post_bookmark, upvote_post, retract_post_vote, toggle_post_subscription, \
+    toggle_post_event_participation
 from posts.views.feed import feed
-from posts.views.posts import show_post, edit_post, upvote_post, retract_post_vote, compose, compose_type, \
-    toggle_post_subscription, delete_post, unpublish_post, clear_post
+from posts.views.posts import show_post, edit_post, compose, compose_type, \
+    delete_post, unpublish_post, clear_post
 from bookmarks.views import bookmarks
 from search.views import search
 from tickets.views import stripe_ticket_sale_webhook
-from users.api import api_profile, api_profile_by_telegram_id
+
+from users.api import api_profile, api_profile_by_telegram_id, api_profile_tags
 from users.views.delete_account import request_delete_account, confirm_delete_account
 from users.views.friends import api_friend, friends
 from users.views.messages import on_review, rejected, banned
@@ -56,7 +55,6 @@ from users.views.profile import profile, toggle_tag, profile_comments, profile_p
 from users.views.settings import profile_settings, edit_profile, edit_account, edit_notifications, edit_payments, \
     edit_bot, edit_data, request_data
 from users.views.intro import intro
-from users.views.admin_actions import admin_profile
 from users.views.people import people
 from search.api import api_search_users, api_search_tags
 
@@ -88,18 +86,17 @@ urlpatterns = [
     path("auth/openid/revoke", openid_revoke_token, name="openid_revoke_token"),
 
     path("monies/", pay, name="pay"),
-    path("monies/crypto/", crypto, name="crypto"),
     path("monies/done/", done, name="done"),
     path("monies/membership_expired/", membership_expired, name="membership_expired"),
     path("monies/subscription/<str:subscription_id>/stop/", stop_subscription, name="stop_subscription"),
     path("monies/stripe/webhook/", stripe_webhook, name="stripe_webhook"),
     path("monies/stripe/webhook_tickets/", stripe_ticket_sale_webhook, name="stripe_tickets_webhook"),
-    path("monies/coinbase/webhook/", coinbase_webhook, name="coinbase_webhook"),
     path("monies/gift/<int:days>/<slug:user_slug>.json", api_gift_days, name="api_gift_days"),
 
     path("user/<slug:user_slug>/", profile, name="profile"),
     path("user/<slug:user_slug>.json", api_profile, name="api_profile"),
     path("user/by_telegram_id/<slug:telegram_id>.json", api_profile_by_telegram_id, name="api_profile_by_telegram_id"),
+    path("user/<slug:user_slug>/tags.json", api_profile_tags, name="api_profile_tags"),
     path("user/<slug:user_slug>/comments/", profile_comments, name="profile_comments"),
     path("user/<slug:user_slug>/posts/", profile_posts, name="profile_posts"),
     path("user/<slug:user_slug>/badges/", profile_badges, name="profile_badges"),
@@ -117,7 +114,6 @@ urlpatterns = [
     path("user/<slug:user_slug>/edit/monies/", edit_payments, name="edit_payments"),
     path("user/<slug:user_slug>/edit/data/", edit_data, name="edit_data"),
     path("user/<slug:user_slug>/edit/data/request/", request_data, name="request_user_data"),
-    path("user/<slug:user_slug>/admin/", admin_profile, name="admin_profile"),
 
     path("apps/", list_apps, name="apps"),
     path("apps/create/", create_app, name="create_app"),
@@ -147,9 +143,7 @@ urlpatterns = [
     path("post/<slug:post_slug>/upvote/", upvote_post, name="upvote_post"),
     path("post/<slug:post_slug>/retract_vote/", retract_post_vote, name="retract_post_vote"),
     path("post/<slug:post_slug>/subscription/", toggle_post_subscription, name="toggle_post_subscription"),
-    path("post/<slug:post_slug>/admin/", admin_post, name="admin_post"),
-    path("post/<slug:post_slug>/curate/", curate_post, name="curate_post"),
-    path("post/<slug:post_slug>/announce/", announce_post, name="announce_post"),
+    path("post/<slug:post_slug>/participate/", toggle_post_event_participation, name="toggle_post_event_participation"),
     path("post/<slug:post_slug>/comment/create/", create_comment, name="create_comment"),
     path("post/<slug:post_slug>/comment/<uuid:comment_id>/", show_comment, name="show_comment"),
     path("post/<slug:post_slug>/badge/", create_badge_for_post, name="create_badge_for_post"),
@@ -170,6 +164,7 @@ urlpatterns = [
     re_path(r"^label/(?P<label_code>[^/]+)/{}/$".format(ORDERING_RE), feed, name="feed_label_ordering"),
 
     path("invites/", list_invites, name="invites"),
+    path("invites/generate_invite_code/", godmode_generate_invite_code, name="godmode_generate_invite_code"),
     path("invites/<slug:invite_code>/", show_invite, name="show_invite"),
     path("invites/<slug:invite_code>/activate/", activate_invite, name="activate_invite"),
     path("invites.json", api_gift_invite_link, name="api_gift_invite_link"),
@@ -198,23 +193,20 @@ urlpatterns = [
          name="network_chat"),
 
     # admin features
-    path("godmode/", godmode_settings, name="godmode_settings"),
-    path("godmode/admin/", admin.site.urls),
-    path("godmode/network/", godmode_network_settings, name="godmode_network_settings"),
-    path("godmode/digest/", godmode_digest_settings, name="godmode_digest_settings"),
-    path("godmode/invite/", godmode_invite, name="godmode_invite"),
-    path("godmode/generate_invite_code/", godmode_generate_invite_code, name="godmode_generate_invite_code"),
-    path("godmode/sunday_posts/", godmode_sunday_posts, name="godmode_sunday_posts"),
-    path("godmode/mass_email/", godmode_mass_email, name="godmode_mass_email"),
+    path("godmode/", godmode, name="godmode_settings"),
     path("godmode/dev_login/", debug_dev_login, name="debug_dev_login"),
     path("godmode/random_login/", debug_random_login, name="debug_random_login"),
     path("godmode/login/<str:user_slug>/", debug_login, name="debug_login"),
-    path("godmode/ai/", llm_agent_playground, name="llm_agent_playground"),
+    path("godmode/page/<slug:page_name>/", godmode_show_page, name="godmode_show_page"),
+    path("godmode/<slug:model_name>/", godmode_list_model, name="godmode_list_model"),
+    path("godmode/<slug:model_name>/create/", godmode_create_model, name="godmode_create_model"),
+    path("godmode/<slug:model_name>/<str:item_id>/edit/", godmode_edit_model, name="godmode_edit_model"),
+    path("godmode/<slug:model_name>/<str:item_id>/delete/", godmode_delete_model, name="godmode_delete_model"),
+    path("godmode/<slug:model_name>/<str:item_id>/action/<str:action_code>/", godmode_action, name="godmode_action"),
 
     # misc
     path("misc/calendar/ical", generate_ical_invite, name="generate_ical_invite"),
     path("misc/calendar/google", generate_google_invite, name="generate_google_invite"),
-    path("misc/badge_generator/", badge_generator, name="badge_generator"),
     path("misc/mass_note/", mass_note, name="mass_note"),
 
     # feeds

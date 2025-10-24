@@ -19,6 +19,9 @@ register = template.Library()
 
 @register.simple_tag(takes_context=True)
 def css_classes(context, post):
+    if not post:
+        return ""
+
     classes = [f"feed-post-{post.type}"]
     me = context.get("me")
 
@@ -151,3 +154,7 @@ def og_image(post):
     })
 
     return f"{settings.OG_IMAGE_GENERATOR_URL}?{params}"
+
+@register.filter
+def human_readable_timezone(timezone):
+    return dict(settings.SUPPORTED_TIME_ZONES).get(timezone)

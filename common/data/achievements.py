@@ -133,7 +133,7 @@ ACHIEVEMENTS = [
     }),
     ("mic", {
         "name": "Золотой микрофон",
-        "description": "За выступление на АМА  и митапах в качестве оратора",
+        "description": "За выступление на клубных ивентах, митапах или АМА в качестве оратора",
         "image": "https://vas3k.club/static/images/achievements/mic.png",
         "style": "background-color: #9370D8; font-size: 130%;",
     }),
@@ -265,7 +265,7 @@ ACHIEVEMENTS = [
     }),
     ("cake_is_a_lie", {
         "name": "The cake is a lie",
-        "description": "За победу над Безумной Машиной в Квесте",
+        "description": "За победу над Безумной Машиной в Квесте 2024",
         "image": "https://vas3k.club/static/images/achievements/cake_is_a_lie.png",
         "style": "background-color: #FF7400; font-size: 120%;",
     }),
@@ -339,7 +339,7 @@ ACHIEVEMENTS = [
         "name": "Покерфейс",
         "description": "Играл в покер с соклубниками",
         "image": "https://vas3k.club/static/images/achievements/pokerface.png",
-        "style": "background-color: #F1DFC5; font-size: 140%;",
+        "style": "background-color: #F1DFC5; font-size: 130%;",
     }),
     ("vas3k_flot_2024", {
         "name": "Вастрик ⛵ Флот 2024",
@@ -347,11 +347,11 @@ ACHIEVEMENTS = [
         "image": "https://vas3k.club/static/images/achievements/vas3k_flot_2024.png",
         "style": "background-color: #4c98d5; font-size: 120%;",
     }),
-    ("grill_master", {
-        "name": "Гриль Мастер",
-        "description": "Пожарил ребятам вкуснейших мяс на клубной сходке",
-        "image": "https://vas3k.club/static/images/achievements/grill_master.png",
-        "style": "background-color: #EA780E; font-size: 130%;",
+    ("vas3k_flot_2025", {
+        "name": "Вастрик ⛵ Флот 2025",
+        "description": "Участнику Вастрик Флота в Турции осенью 2025",
+        "image": "https://vas3k.club/static/images/achievements/vas3k_flot_2025.png",
+        "style": "background-color: #4c98d5; font-size: 120%;",
     }),
     ("spooky", {
         "name": "Спуки",
@@ -367,7 +367,7 @@ ACHIEVEMENTS = [
     }),
     ("birdwatcher", {
         "name": "Смотритель птиц",
-        "description": "За победу на конкурсе бёрдвочинга. Для самых наблюдательных.",
+        "description": "Ходил смотреть на птиц с клубняшами",
         "image": "https://vas3k.club/static/images/achievements/birds.png",
         "style": "background-color: #6A98FF; font-size: 130%;",
     }),
@@ -394,6 +394,42 @@ ACHIEVEMENTS = [
         "description": "За участие в зимнем музыкальном челлендже 2025",
         "image": "https://vas3k.club/static/images/achievements/music_jam_7.png",
         "style": "background-color: #CB562D; font-size: 120%;",
+    }),
+    ("grill_master", {
+        "name": "Гриль Мастер",
+        "description": "Пожарил ребятам вкуснейших мяс на клубной сходке",
+        "image": "https://vas3k.club/static/images/achievements/grill_master.png",
+        "style": "background-color: #EA780E; font-size: 140%;",
+    }),
+    ("naked", {
+        "name": "Голый Мастер",
+        "description": "Был голеньким на клубном ивенте 🍆🍆🍆",
+        "image": "https://vas3k.club/static/images/achievements/naked.webp",
+        "style": "background-color: #DB4C77; font-size: 140%;",
+    }),
+    ("barmen", {
+        "name": "Клубный Бармен",
+        "description": "Разливал напитки соклубням на одном из оффлайн ивентов",
+        "image": "https://vas3k.club/static/images/achievements/barmen.webp",
+        "style": "background-color: #3CA2C8; font-size: 140%;",
+    }),
+    ("intellectual", {
+        "name": "Уважаемые Знатоки",
+        "description": "Призовое место в клубном турнире интеллектуальных игр",
+        "image": "https://vas3k.club/static/images/achievements/intellectual.webp",
+        "style": "background-color: #535D94;",
+    }),
+    ("vas3k_quest", {
+        "name": "Вастрик Квест",
+        "description": "Призовое место в одном из клубных квестов",
+        "image": "https://vas3k.club/static/images/achievements/vas3k_quest.webp",
+        "style": "background-color: #006100; font-size: 130%;",
+    }),
+    ("vas3k_quiz", {
+        "name": "Вастрик Квизер",
+        "description": "Призовое место в одном из клубных квизов",
+        "image": "https://vas3k.club/static/images/achievements/vas3k_quizz.webp",
+        "style": "background-color: #FF5154; font-size: 130%;",
     }),
 ]
 

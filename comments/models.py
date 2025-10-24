@@ -61,7 +61,7 @@ class Comment(models.Model):
 
     class Meta:
         db_table = "comments"
-        ordering = ["created_at"]
+        ordering = ["-created_at"]
 
     def to_dict(self):
         return {
@@ -129,6 +129,7 @@ class Comment(models.Model):
     def visible_objects(cls, show_deleted=False):
         comments = cls.objects\
             .filter(is_visible=True)\
+            .order_by("created_at")\
             .select_related("author", "post", "reply_to")
 
         if not show_deleted:
@@ -167,19 +168,6 @@ class Comment(models.Model):
                 return parent
 
         raise NotFound(title="Родительский коммент не найден")
-
-    @classmethod
-    def check_rate_limits(cls, user):
-        if user.is_moderator:
-            return True
-
-        day_comment_count = Comment.visible_objects()\
-            .filter(
-                author=user, created_at__gte=datetime.utcnow() - timedelta(hours=24)
-            )\
-            .count()
-
-        return day_comment_count < settings.RATE_LIMIT_COMMENTS_PER_DAY
 
 
 class CommentVote(models.Model):
@@ -241,5 +229,6 @@ class CommentVote(models.Model):
                 comment.author.decrement_vote_count()
 
                 return True if is_vote_deleted > 0 else False
+            return False
         except CommentVote.DoesNotExist:
             return False
