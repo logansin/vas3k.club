@@ -237,6 +237,13 @@
         border-color: #0088cc;
     }
 
+.border {
+    border-radius: var(--button-border-radius);
+    border: var(--button-border);
+    color: var(--button-color);
+    padding: 5px 10px;
+}
+
 /* SLIDER THEME */
 input[type=range] {
   -webkit-appearance: none;
@@ -551,15 +558,25 @@ input[type=range]:focus::-ms-fill-upper {
 
 .link-favicon {
     display: inline-block;
-    min-height: 1.2em;
-    min-width: 1.2em;
+    height: 1.1em;
+    width: 1.1em;
     background-position: center center;
     background-size: cover;
     vertical-align: middle;
+    padding-right: 0.2em;
 }
 
     .link-favicon i {
         font-size: 140%;
+    }
+
+    footer .link-favicon,
+    .network .link-favicon,
+    .intro .link-favicon,
+    .post-header .link-favicon,
+    .landing .link-favicon,
+    .people .link-favicon {
+        display: none;
     }
 
 .show-on-iphone {
@@ -592,6 +609,9 @@ input[type=range]:focus::-ms-fill-upper {
 
 .CodeMirror-line {
     word-break: break-word !important;
+}
+.CodeMirror-cursor {
+    border-color: var(--input-color);
 }
 
 .topic {
@@ -817,3 +837,30 @@ img.emoji {
     transform: scale(1.05);
     transition: transform .2s;
 }
+
+.page-404 {
+    text-align: center;
+}
+
+    .page-404-title {
+        font-size: 200%;
+        margin-top: 130px;
+        margin-bottom: 50px;
+    }
+
+    .page-404-game {
+        width: 100%;
+        max-width: 800px;
+    }
+
+        .page-404-game * {
+            outline: none;
+        }
+
+    .page-404-game-description {
+        opacity: 0.6;
+    }
+
+    .page-404-buttons {
+        padding-top: 150px;
+    }

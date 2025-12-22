@@ -42,7 +42,6 @@
             text-align: left;
             font-size: 110%;
             padding-top: 20px;
-            max-height: 700px;
             overflow: hidden;
         }
 
@@ -137,6 +136,14 @@
         text-align: right;
         padding-bottom: 20px;
         font-size: 120%;
+    }
+
+    .profile-settings {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding-bottom: 30px;
     }
 
     .profile-statuses {
